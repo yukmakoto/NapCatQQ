@@ -199,11 +199,10 @@ jobs:
           done
 
           if [ -z "$PREV_TAG" ]; then
-            echo "❌ Could not find previous tag for $CURRENT_TAG, aborting."
-            exit 1
-          fi
-
-          echo "Previous tag: $PREV_TAG"
+            echo "⚠️ Could not find previous tag for $CURRENT_TAG, using default release notes."
+            cp .github/prompt/default.md CHANGELOG.md
+          else
+            echo "Previous tag: $PREV_TAG"
 
           # 强制拉取上一个 tag 和当前 tag
           git fetch origin "refs/tags/$PREV_TAG:refs/tags/$PREV_TAG" --force
@@ -257,6 +256,7 @@ jobs:
           else
             echo "❌ Curl failed, using default.md"
             cp .github/prompt/default.md CHANGELOG.md
+          fi
           fi
           echo "=== generated release note ==="
           cat CHANGELOG.md
